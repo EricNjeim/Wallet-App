@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "866470496042",
+    "project_id": "eric-summer2023",
+    "storage_bucket": "eric-summer2023.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:866470496042:android:b80ac258cb1069b3640053",
+        "android_client_info": {
+          "package_name": "com.example.eric_summer2023"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "866470496042-6h9huiksssu0cirv7c3ad9setjcmv35d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBqUEjAenmbLn5cYkksHISBH9UOhepxxEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "866470496042-6h9huiksssu0cirv7c3ad9setjcmv35d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
