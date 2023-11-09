@@ -3,6 +3,7 @@ package com.example.eric_summer2023
 
 import android.R
 import android.app.AlarmManager
+import android.app.AlarmManager.OnAlarmListener
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -13,11 +14,13 @@ import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.NumberPicker
 import android.widget.Spinner
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.eric_summer2023.databinding.ActivityBillsspinnerBinding
 import com.google.common.reflect.TypeToken
 import com.google.gson.Gson
 import java.util.Calendar
+
 
 class Billsspinner : AppCompatActivity() {
 
@@ -48,10 +51,6 @@ class Billsspinner : AppCompatActivity() {
                 super.onCreate(savedInstanceState)
                 binding = ActivityBillsspinnerBinding.inflate(layoutInflater)
                 setContentView(binding.root)
-
-
-
-
                 spinner1 = binding.coursesspinner
                 spinner2 = binding.spinner
 
@@ -97,7 +96,7 @@ class Billsspinner : AppCompatActivity() {
                 spinner2Adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
                 spinner2.adapter = spinner2Adapter
 
-                // Set a listener on spinner1 to update spinner2's options
+
                 spinner1.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                     override fun onItemSelected(
                         parent: AdapterView<*>?,
@@ -110,19 +109,12 @@ class Billsspinner : AppCompatActivity() {
                         spinner2Adapter.clear()
                         spinner2Adapter.addAll(*optionsForSpinner2)
                         spinner2Adapter.notifyDataSetChanged()
-
-
-
-
                     }
 
                     override fun onNothingSelected(parent: AdapterView<*>?) {
-                        // Handle case where nothing is selected in spinner1 (if needed)
+
                     }
                 }
-
-
-
                 binding.button2.setOnClickListener {
 
                     val temp=ArrayList<String>()
@@ -180,10 +172,7 @@ class Billsspinner : AppCompatActivity() {
                     dayPicker.minValue = 1
                     dayPicker.maxValue = 31
                 }
-
-
         } else {
-
                 if (monthPicker.value == 2) {
                     dayPicker.minValue = 1
                     dayPicker.maxValue = 28
@@ -195,8 +184,6 @@ class Billsspinner : AppCompatActivity() {
                     dayPicker.maxValue = 31
                 }
             }}
-
-
     fun monthschange(newwVal:Int,yearPicker:NumberPicker,dayPicker:NumberPicker){
         if (yearPicker.value % 4 == 0) {
 

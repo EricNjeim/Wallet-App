@@ -1,15 +1,11 @@
 package com.example.eric_summer2023
 
-import android.app.Activity
 import android.content.Context
-import android.content.Intent
-import android.content.SharedPreferences
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eric_summer2023.databinding.ActivityDuebillsBinding
-import com.example.eric_summer2023.databinding.ActivityHomescreenBinding
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
@@ -38,10 +34,13 @@ class Duebills : AppCompatActivity() {
         bills = gson.fromJson(json, type) ?: ArrayList()
 
         recyclerView = binding.rvv
+
+
+
+
+
         var layoutManager = LinearLayoutManager(this)
-
         recyclerView.layoutManager = layoutManager
-
         adapter = Duebillsadapter(bills)
         recyclerView.adapter = adapter
     }
