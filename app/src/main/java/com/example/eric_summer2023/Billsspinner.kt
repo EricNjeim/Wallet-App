@@ -1,26 +1,21 @@
 package com.example.eric_summer2023
 
+
 import android.R
-import android.app.Activity
+import android.app.AlarmManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import android.widget.NumberPicker
 import android.widget.Spinner
-import android.widget.Toast
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.example.eric_summer2023.databinding.ActivityAddTransactoinBinding
+import androidx.appcompat.app.AppCompatActivity
 import com.example.eric_summer2023.databinding.ActivityBillsspinnerBinding
-import com.example.eric_summer2023.databinding.ActivityDuebillsBinding
 import com.google.common.reflect.TypeToken
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
 import java.util.Calendar
 
@@ -28,11 +23,12 @@ class Billsspinner : AppCompatActivity() {
 
     private lateinit var binding: ActivityBillsspinnerBinding
     private var bills= ArrayList<ArrayList<String>>()
-            private lateinit var spinner1: Spinner
-            private lateinit var spinner2: Spinner
-            lateinit var selectedItem:String
-            var ss:String=" "
-            private val optionsMap = mapOf(
+   private var alarm: AlarmManager= getSystemService(Context.ALARM_SERVICE) as AlarmManager
+    private lateinit var spinner1: Spinner
+    private lateinit var spinner2: Spinner
+    lateinit var selectedItem:String
+
+    private val optionsMap = mapOf(
                 "Withdrawal" to arrayOf(
                     "Select One",
                     "Food/Drink",
@@ -63,9 +59,12 @@ class Billsspinner : AppCompatActivity() {
                 val monthPicker=binding.monthPicker
                 val yearPicker=binding.yearPicker
                 val currentYear = Calendar.getInstance().get(Calendar.YEAR)
-                yearPicker.minValue = currentYear // Set the range as needed
+                yearPicker.minValue = currentYear
                 yearPicker.maxValue = currentYear+5
-                monthPicker.displayedValues = arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+
+
+                val allmonths= arrayOf("Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec")
+                monthPicker.displayedValues=allmonths
                 monthPicker.minValue = 1
                 monthPicker.maxValue = 12
                 dayPicker.minValue = 1
@@ -129,7 +128,20 @@ class Billsspinner : AppCompatActivity() {
                     val temp=ArrayList<String>()
                     temp.add(spinner1.selectedItem.toString())
                     temp.add(spinner2.selectedItem.toString())
-                   val tt:String=dayPicker.value.toString()+"/"+monthPicker.value.toString()+"/"+yearPicker.value.toString()
+                    val tt:String=dayPicker.value.toString()+"/"+monthPicker.value.toString()+"/"+yearPicker.value.toString()
+
+
+
+                    var cal= Calendar.getInstance();
+                    cal.set(Calendar.DAY_OF_MONTH, dayPicker as Int);
+                    cal.set(Calendar.MONTH, allmonths.indexOf(monthPicker.toString())+1)
+                    cal.set(Calendar.YEAR, yearPicker as Int);
+                    cal.set(Calendar.HOUR_OF_DAY, 9 );
+                    val intent799 = Intent(this, ReminderService::class.java)
+                    intent799.putExtra("Date", tt)
+                    val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent799, PendingIntent.FLAG_UPDATE_CURRENT)
+                    alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,cal.timeInMillis,pendingIntent);
+
                     temp.add(tt)
                     val preferences = getSharedPreferences("Eric-Bills", Context.MODE_PRIVATE)
                     val gson = Gson()
@@ -138,7 +150,11 @@ class Billsspinner : AppCompatActivity() {
                     val type = object : TypeToken<ArrayList<ArrayList<String>>>() {}.type
                     bills = gson.fromJson(json, type) ?: ArrayList()
 
+
                     bills.add(temp)
+                    if(bills.size==1){
+                        startService(Intent(this, ReminderService::class.java))
+                    }
                     val sharedPreferences: SharedPreferences =
                         getSharedPreferences("Eric-Bills", Context.MODE_PRIVATE)
                     val editor = sharedPreferences.edit()
@@ -149,35 +165,7 @@ class Billsspinner : AppCompatActivity() {
                     finish()
 
 
-                /*   if (spinner2.selectedItem != null) {
-                        ss = spinner2.selectedItem.toString()}
-                    if (binding.editTextNumberDecimal.text.toString() .isEmpty()) {
-                        Toast.makeText(this,"Please enter a value", Toast.LENGTH_LONG).show()}
-                    else{if(selectedItem=="Withdrawal" && ss=="Select One"){
-                        Toast.makeText(this,"Please select a withdrawal option", Toast.LENGTH_LONG).show()
-                    }
-                    else if(selectedItem=="Deposit" && ss=="Select One"){
-                        Toast.makeText(this,"Please select a deposit option", Toast.LENGTH_LONG).show()
-                    }
-                    else{
-                        val intent9 = Intent(this, Homescreen::class.java).apply{
-                            if(selectedItem=="Deposit") {
-                                putExtra("Extra_Message", selectedItem)
-                                putExtra("Extra", ss)
-                                putExtra("Ex", binding.editTextNumberDecimal.text.toString().toDouble())
-                            }
-                            else{
-                                putExtra("Extra_Message", selectedItem)
-                                putExtra("Extra", ss)
-                                putExtra("Ex", binding.editTextNumberDecimal.text.toString().toDouble())
-                            }
-                        }
 
-
-                        setResult(Activity.RESULT_OK, intent9)
-                        finish()
-                    }}
-                }*/
             }}
     fun yearchange(newVal:Int,monthPicker:NumberPicker,dayPicker:NumberPicker){
         if ( newVal% 4 == 0) {
@@ -185,7 +173,7 @@ class Billsspinner : AppCompatActivity() {
                 if (monthPicker.value == 2) {
                     dayPicker.minValue = 1
                     dayPicker.maxValue = 29
-                } else if (monthPicker.value === 4 || monthPicker.value  == 6 || monthPicker.value == 9 || monthPicker.value == 11) {
+                } else if (monthPicker.value== 4 || monthPicker.value  == 6 || monthPicker.value == 9 || monthPicker.value == 11) {
                     dayPicker.minValue = 1
                     dayPicker.maxValue = 30
                 } else {
@@ -223,7 +211,7 @@ class Billsspinner : AppCompatActivity() {
                 dayPicker.maxValue = 31
             }}
         else {
-            if (newwVal == 2) {
+            if(newwVal == 2) {
                 dayPicker.minValue = 1
                 dayPicker.maxValue = 28
             } else if (newwVal == 4 || newwVal == 6 || newwVal == 9 || newwVal == 11) {

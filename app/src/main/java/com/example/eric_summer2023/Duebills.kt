@@ -21,8 +21,6 @@ class Duebills : AppCompatActivity() {
     private lateinit var adapter: Duebillsadapter
     private lateinit var binding: ActivityDuebillsBinding
     private var bills = ArrayList<ArrayList<String>>()
-
-    //var closestbill = HashMap<String,Double>()
     val db = Firebase.firestore
 
 

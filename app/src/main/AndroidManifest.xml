@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -44,7 +46,7 @@
             android:name=".signin"
             android:exported="false" />
         <activity
-            android:name=".signup"
+            android:name=".Signup"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
@@ -55,6 +57,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <action android:name="android.intent.action.BOOT_COMPLETED" />
     </application>
 
 </manifest>
