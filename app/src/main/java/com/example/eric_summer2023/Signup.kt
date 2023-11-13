@@ -17,14 +17,15 @@ class Signup : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
     private lateinit var firebaseAuth: FirebaseAuth
     val db = Firebase.firestore
-    /*public override fun onStart() {
+    public override fun onStart() {
         super.onStart()
-        // Check if user is signed in (non-null) and update UI accordingly.
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
-            //gotonextactivity
+            val intent=Intent(this,Homescreen::class.java)
+            startActivity(intent)
         }
-    }*/
+    }
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
 

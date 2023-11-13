@@ -1,11 +1,10 @@
 package com.example.eric_summer2023
 
 
-import android.content.ContentValues
+
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
-import android.util.Log
 import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
@@ -76,25 +75,4 @@ class signin : AppCompatActivity() {
 
     }
     }
-
-/*
-    override fun onPause() {
-        super.onPause()
-        emailtext=binding.email
-        val emailsf=emailtext.text.toString()
-         editor.apply {
-             putString("sf_email",emailsf)
-             commit()
-         }
-    }
-
-    override fun onResume() {
-        super.onResume()
-        emailtext=binding.email
-        val emailsf=sf.getString("sf_email", null)
-        emailtext.setText(emailsf)
-    }*/
-
-
-
 
