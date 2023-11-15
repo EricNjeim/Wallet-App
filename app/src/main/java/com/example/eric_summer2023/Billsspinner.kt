@@ -26,7 +26,7 @@ class Billsspinner : AppCompatActivity() {
 
     private lateinit var binding: ActivityBillsspinnerBinding
     private var bills= ArrayList<ArrayList<String>>()
-   private var alarm: AlarmManager= getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
     private lateinit var spinner1: Spinner
     private lateinit var spinner2: Spinner
     lateinit var selectedItem:String
@@ -49,6 +49,7 @@ class Billsspinner : AppCompatActivity() {
 
             override fun onCreate(savedInstanceState: Bundle?) {
                 super.onCreate(savedInstanceState)
+                 var alarm: AlarmManager= getSystemService(Context.ALARM_SERVICE) as AlarmManager
                 binding = ActivityBillsspinnerBinding.inflate(layoutInflater)
                 setContentView(binding.root)
                 spinner1 = binding.coursesspinner
@@ -124,7 +125,7 @@ class Billsspinner : AppCompatActivity() {
 
 
 
-                    var cal= Calendar.getInstance();
+                  /*  var cal= Calendar.getInstance();
                     cal.set(Calendar.DAY_OF_MONTH, dayPicker as Int);
                     cal.set(Calendar.MONTH, allmonths.indexOf(monthPicker.toString())+1)
                     cal.set(Calendar.YEAR, yearPicker as Int);
@@ -133,7 +134,7 @@ class Billsspinner : AppCompatActivity() {
                     intent799.putExtra("Date", tt)
                     val pendingIntent = PendingIntent.getBroadcast(applicationContext, 0, intent799, PendingIntent.FLAG_UPDATE_CURRENT)
                     alarm.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP,cal.timeInMillis,pendingIntent);
-
+*/
                     temp.add(tt)
                     val preferences = getSharedPreferences("Eric-Bills", Context.MODE_PRIVATE)
                     val gson = Gson()

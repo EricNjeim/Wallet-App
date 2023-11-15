@@ -22,15 +22,15 @@ class AddTransactoin : AppCompatActivity() {
     private val optionsMap = mapOf(
         "Withdrawal" to arrayOf(
             "Select One",
-            "Food/Drink",
-            "Game",
-            "Transportation",
+            "Food & Drinks",
+            "Shopping",
+            "Housing",
             "Entertainment",
-            "Tuition",
-            "Clothes",
-            "Other"
+            "Transportation",
+            "Investments",
+            "Others"
         ),
-        "Deposit" to arrayOf("Select One", "Gift", "Investment Returns", "Allowance", "Other")
+        "Deposit" to arrayOf("Select One", "Salary","Gift", "Investment Returns", "Allowance", "Other")
     )
 
 
