@@ -69,7 +69,7 @@ class Homescreen : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        binding.cvbills.setOnClickListener {
+        binding.cvv.setOnClickListener {
             val intent0=Intent(this, Billsspinner::class.java)
             startActivityForResult(intent0, REQUEST_CODE)
         }
@@ -77,7 +77,7 @@ class Homescreen : AppCompatActivity() {
             val intent = Intent(this, AddTransactoin::class.java)
             startActivityForResult(intent, REQUEST_CODE)
         }
-        binding.recbills.setOnClickListener {
+        binding.cvbills.setOnClickListener {
             val intent90 = Intent(this, Duebills::class.java)
             startActivityForResult(intent90, REQUEST_CODE)
         }
