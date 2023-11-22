@@ -1,0 +1,2 @@
+Smart Wallet is a budget and money manager that makes tracking your expenses a walk in the park.It will help you plan your future expenses-a month , a year , or 5 years down the line.Using Firebase authentication and databases, your personal info and balance statistics are 100% secured and taken well care of.
+For crypto enthusiasts we added a feature for you that helps in easily studying your desired coins using CoinMarketCap data which provides a professional and reliable API.  
