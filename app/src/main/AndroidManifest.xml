@@ -3,7 +3,6 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <uses-permission android:name="android.permission.INTERNET" />
-
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
@@ -17,6 +16,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ERICSUMMER2023"
         tools:targetApi="31">
+        <activity
+            android:name=".Signout"
+            android:exported="false" />
         <activity
             android:name=".Graph"
             android:exported="false" />
@@ -35,11 +37,7 @@
         <activity
             android:name=".Retro"
             android:exported="false" />
-        <activity
-            android:name=".NavDrawer"
-            android:exported="false"
-            android:label="@string/title_activity_nav_drawer"
-            android:theme="@style/Theme.ERICSUMMER2023.NoActionBar" />
+
         <activity
             android:name=".recview"
             android:exported="false" />
@@ -49,6 +47,7 @@
         <activity
             android:name=".Signup"
             android:exported="false" />
+
         <receiver
             android:name=".ReminderService"
             android:enabled="true"
@@ -56,21 +55,21 @@
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </receiver>
+
         <activity
             android:name=".MainActivity"
-            android:theme="@style/Theme.AppCompat.NoActionBar"
-            android:exported="true">
+            android:exported="true"
+            android:theme="@style/Theme.AppCompat.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
-
     </application>
 
 </manifest>

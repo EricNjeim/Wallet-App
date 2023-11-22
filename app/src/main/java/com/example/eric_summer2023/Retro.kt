@@ -21,14 +21,13 @@ import java.util.Locale
 
 
 class Retro: AppCompatActivity() {
-    // creating variable for recycler view,
-    // adapter, array list, progress bar
+
     private lateinit var binding: ActivityRetroBinding
     lateinit var currencyRV: RecyclerView
     lateinit var searchEdt: EditText
     lateinit var currencyList: ArrayList<Currency>
     lateinit var currencyRVAdapter: CurrencyRVAdapter
-     lateinit var loadingPB: ProgressBar
+    lateinit var loadingPB: ProgressBar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding= ActivityRetroBinding.inflate(layoutInflater)
@@ -55,7 +54,6 @@ class Retro: AppCompatActivity() {
 
     private fun filter(filter: String) {
         val filteredlist: ArrayList<Currency> = ArrayList<Currency>()
-
         for (item in currencyList) {
             if (item.getName().lowercase().contains(filter.lowercase(Locale.getDefault()))) {
                 filteredlist.add(item)
@@ -86,7 +84,7 @@ class Retro: AppCompatActivity() {
                             val price = USD.getDouble("price")
                             currencyList.add(Currency(name, symbol, price))
                         }
-                        // notifying adapter on data change.
+
                         currencyRVAdapter.notifyDataSetChanged()
                     } catch (e: JSONException) {
                         // handling json exception.

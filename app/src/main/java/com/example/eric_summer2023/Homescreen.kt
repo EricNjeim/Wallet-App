@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -14,48 +15,59 @@ import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
 import com.google.gson.Gson
-
-
 @Suppress("DEPRECATION")
 class Homescreen : AppCompatActivity() {
-
+    val TAG="HELLOWORLD"
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MyRecyclerViewAdapter
     private lateinit var binding: ActivityHomescreenBinding
     private var totalbalance: Double=0.0
     private var trans = ArrayList<ArrayList<String>>()
+     private var fullname:String=""
 
     val db=Firebase.firestore
 
     companion object {
-        private const val REQUEST_CODE = 123 // Choose any request code you prefer
+        private const val REQUEST_CODE = 123
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomescreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        db.collection("Eric Njeim").document("Details")
+        Log.d(TAG,"I am talking to you from "+Thread.currentThread())
+        //fullname=intent.getStringExtra("FN")!!
+        db.collection("MYWALLET").document("Details")
             .get()
             .addOnCompleteListener { task ->
                 if (task.isSuccessful ) {
+                    Log.d(TAG,"I am talking to you from "+Thread.currentThread())
                     val documentSnapshot = task.result
                     if (documentSnapshot.exists()) {
                         totalbalance = documentSnapshot.getDouble("Balance")!!
-                        binding.textView6.text = totalbalance.toString()
-                        binding.textView3.text= documentSnapshot.getString("Full Name")!!
+
+                        binding.textView6.text = String.format("%.2f", totalbalance)
+                        fullname=documentSnapshot.getString("Full Name")!!
+                        binding.textView3.text= fullname
+
 
                     }}}
 
-        val sharedPreferences = getSharedPreferences("Your_Pref_Name", Context.MODE_PRIVATE)
-        val gson = Gson()
-        val json = sharedPreferences.getString("Recycler List", "")
+        var sharedPreferences = getSharedPreferences(fullname, Context.MODE_PRIVATE)
+        var gson = Gson()
+        var json = sharedPreferences.getString("Recycler List", "")
 
-        val type = object : TypeToken<ArrayList<ArrayList<String>>>() {}.type
+        var type = object : TypeToken<ArrayList<ArrayList<String>>>() {}.type
+        trans = gson.fromJson(json, type) ?: ArrayList()
+/*
+         sharedPreferences = getSharedPreferences(fullname, Context.MODE_PRIVATE)
+        gson = Gson()
+        json = sharedPreferences.getString("Recycler List", "")
+
+         type = object : TypeToken<ArrayList<ArrayList<String>>>() {}.type
         trans = gson.fromJson(json, type) ?: ArrayList()
 
-
-
+*/
 
         recyclerView = binding.rv
         var layoutManager= LinearLayoutManager(this)
@@ -69,17 +81,21 @@ class Homescreen : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        binding.cvv.setOnClickListener {
-            val intent0=Intent(this, Billsspinner::class.java)
+        binding.cvvv.setOnClickListener {
+            val intent0=Intent(this, AddTransactoin::class.java)
             startActivityForResult(intent0, REQUEST_CODE)
         }
         binding.cvv.setOnClickListener {
-            val intent = Intent(this, AddTransactoin::class.java)
+            val intent = Intent(this,Billsspinner::class.java)
             startActivityForResult(intent, REQUEST_CODE)
         }
         binding.cvbills.setOnClickListener {
             val intent90 = Intent(this, Duebills::class.java)
             startActivityForResult(intent90, REQUEST_CODE)
+        }
+        binding.cvnew.setOnClickListener {
+            val intent00 = Intent(this, Retro::class.java)
+            startActivityForResult(intent00, REQUEST_CODE)
         }
     }
 
@@ -97,7 +113,7 @@ class Homescreen : AppCompatActivity() {
                 temp.add(y)
                 temp.add(x.toString())
 
-                val documentRef = db.collection("Eric Njeim").document("Details")
+                val documentRef = db.collection("MYWALLET").document("Details")
                 db.runTransaction { transaction ->
                     val documentSnapshot = transaction.get(documentRef)
 
@@ -116,7 +132,7 @@ class Homescreen : AppCompatActivity() {
 
                 trans.add(temp)
                 val sharedPreferences: SharedPreferences =
-                    getSharedPreferences("Your_Pref_Name", Context.MODE_PRIVATE)
+                    getSharedPreferences(fullname, Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
                 val g = Gson()
                 val j = g.toJson(trans)
