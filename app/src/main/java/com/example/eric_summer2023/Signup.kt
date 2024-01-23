@@ -20,30 +20,23 @@ class Signup : AppCompatActivity() {
     private lateinit var binding: ActivitySignupBinding
     private lateinit var firebaseAuth: FirebaseAuth
     val db = Firebase.firestore
-   var fullname:String=""
+    var fullname:String=""
     public override fun onStart() {
         super.onStart()
         val currentUser = firebaseAuth.currentUser
         if (currentUser != null) {
-            val intent=Intent(this,Homescreen::class.java)
-
+            val intent = Intent(this, Homescreen::class.java)
             startActivity(intent)
         }
     }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
-
         super.onCreate(savedInstanceState)
-
         binding= ActivitySignupBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
         firebaseAuth= FirebaseAuth.getInstance()
-
-
         binding.button.setOnClickListener {
-
             val email=binding.editTextTextem.text.toString()
             val pass=binding.pass.text.toString()
             val confirmpass=binding.confpass.text.toString()
@@ -62,15 +55,10 @@ class Signup : AppCompatActivity() {
                         if (it.isSuccessful){
                             saveUserData()
                             val intent = Intent(this, Homescreen::class.java).apply{
-
                                 putExtra("FN", fullname)
                                 putExtra("Extra_Message", email)
                             }
-
                             startActivity(intent)
-
-
-
                             }
                         else{
                             Toast.makeText(this,it.exception.toString(), Toast.LENGTH_LONG).show() } } }
@@ -79,7 +67,6 @@ class Signup : AppCompatActivity() {
             else{
                 Toast.makeText(this,"Empty fields not allowed", Toast.LENGTH_LONG).show()
             } }
-
     }
       fun saveUserData(){
          val user = hashMapOf(

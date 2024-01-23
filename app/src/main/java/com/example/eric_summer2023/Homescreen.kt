@@ -12,8 +12,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.eric_summer2023.databinding.ActivityHomescreenBinding
 import com.google.common.reflect.TypeToken
-import com.google.firebase.firestore.ktx.firestore
-import com.google.firebase.ktx.Firebase
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.gson.Gson
 @Suppress("DEPRECATION")
 class Homescreen : AppCompatActivity() {
@@ -23,18 +23,19 @@ class Homescreen : AppCompatActivity() {
     private lateinit var binding: ActivityHomescreenBinding
     private var totalbalance: Double=0.0
     private var trans = ArrayList<ArrayList<String>>()
-     private var fullname:String=""
-
-    val db=Firebase.firestore
-
+    private var fullname:String=""
+    val db= FirebaseFirestore.getInstance()
     companion object {
         private const val REQUEST_CODE = 123
     }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityHomescreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        val settings = FirebaseFirestoreSettings.Builder()
+            .setPersistenceEnabled(true)
+            .build()
+        db.firestoreSettings = settings
         Log.d(TAG,"I am talking to you from "+Thread.currentThread())
         //fullname=intent.getStringExtra("FN")!!
         db.collection("MYWALLET").document("Details")
@@ -45,18 +46,14 @@ class Homescreen : AppCompatActivity() {
                     val documentSnapshot = task.result
                     if (documentSnapshot.exists()) {
                         totalbalance = documentSnapshot.getDouble("Balance")!!
-
                         binding.textView6.text = String.format("%.2f", totalbalance)
                         fullname=documentSnapshot.getString("Full Name")!!
                         binding.textView3.text= fullname
-
-
                     }}}
 
         var sharedPreferences = getSharedPreferences(fullname, Context.MODE_PRIVATE)
         var gson = Gson()
         var json = sharedPreferences.getString("Recycler List", "")
-
         var type = object : TypeToken<ArrayList<ArrayList<String>>>() {}.type
         trans = gson.fromJson(json, type) ?: ArrayList()
 /*
@@ -73,27 +70,22 @@ class Homescreen : AppCompatActivity() {
         var layoutManager= LinearLayoutManager(this)
         layoutManager.reverseLayout = true
         recyclerView.layoutManager =layoutManager
-
         adapter = MyRecyclerViewAdapter(trans)
         recyclerView.adapter = adapter
-
     }
-
     override fun onResume() {
-        super.onResume()
-        binding.cvvv.setOnClickListener {
+            super.onResume()
+            binding.cvvv.setOnClickListener {
             val intent0=Intent(this, AddTransactoin::class.java)
-            startActivityForResult(intent0, REQUEST_CODE)
-        }
-        binding.cvv.setOnClickListener {
+            startActivityForResult(intent0, REQUEST_CODE) }
+            binding.cvv.setOnClickListener {
             val intent = Intent(this,Billsspinner::class.java)
-            startActivityForResult(intent, REQUEST_CODE)
-        }
-        binding.cvbills.setOnClickListener {
+            startActivityForResult(intent, REQUEST_CODE) }
+            binding.cvbills.setOnClickListener {
             val intent90 = Intent(this, Duebills::class.java)
             startActivityForResult(intent90, REQUEST_CODE)
         }
-        binding.cvnew.setOnClickListener {
+            binding.cvnew.setOnClickListener {
             val intent00 = Intent(this, Retro::class.java)
             startActivityForResult(intent00, REQUEST_CODE)
         }
