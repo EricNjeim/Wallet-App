@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
 
     <application
+        android:name=".MyApp"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -18,6 +19,7 @@
         android:theme="@style/Theme.ERICSUMMER2023"
         tools:targetApi="31"
         >
+
         <activity
             android:name=".Signout"
             android:exported="false" />
@@ -72,5 +74,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>

@@ -2,6 +2,7 @@ package com.example.eric_summer2023
 
 
 import android.app.Activity
+import android.content.ContentValues
 import android.content.ContentValues.TAG
 import android.content.Context
 import android.content.Intent
@@ -12,30 +13,32 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.example.eric_summer2023.data.repository.Myrepository
 import com.example.eric_summer2023.databinding.ActivityHomescreenBinding
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.gson.Gson
+import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @Suppress("DEPRECATION")
+@AndroidEntryPoint
 class Homescreen : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: MyRecyclerViewAdapter
     private lateinit var binding: ActivityHomescreenBinding
-    val db= FirebaseFirestore.getInstance()
-    private lateinit var viewModel: CoroutineViewModel
-
+    private val db= FirebaseFirestore.getInstance()
+    private val viewModel: CoroutineViewModel by viewModels()
     private var trans = ArrayList<ArrayList<String>>()
     private var fullname:String=""
-
     companion object {
         private const val REQUEST_CODE = 123
     }
@@ -44,22 +47,22 @@ class Homescreen : AppCompatActivity() {
         binding = ActivityHomescreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val settings = FirebaseFirestoreSettings.Builder()
+        /*val settings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
             .build()
         db.firestoreSettings = settings
-
-        viewModel = ViewModelProvider(this).get(CoroutineViewModel::class.java)
+        */
+        viewModel.performAsyncOperation()
         observeViewModel()
-        viewModel.performAsyncOperation(db)
+
+
         val sharedPreferences = getSharedPreferences(fullname, Context.MODE_PRIVATE)
-        var gson = Gson()
-        var json = sharedPreferences.getString("Recycler List", "")
-        var type = object : TypeToken<ArrayList<ArrayList<String>>>() {}.type
+        val gson = Gson()
+        val json = sharedPreferences.getString("Recycler List", "")
+        val type = object : TypeToken<ArrayList<ArrayList<String>>>() {}.type
         trans = gson.fromJson(json, type) ?: ArrayList()
         recyclerView = binding.rv
-        var layoutManager= LinearLayoutManager(this)
-        //layoutManager.reverseLayout = true
+        val layoutManager= LinearLayoutManager(this)
         recyclerView.layoutManager =layoutManager
         adapter = MyRecyclerViewAdapter(trans)
         recyclerView.adapter = adapter
@@ -74,23 +77,23 @@ class Homescreen : AppCompatActivity() {
             startActivityForResult(intent, REQUEST_CODE) }
             binding.cvbills.setOnClickListener {
             val intent90 = Intent(this, Duebills::class.java)
-            startActivityForResult(intent90, REQUEST_CODE)
-        }
+            startActivityForResult(intent90, REQUEST_CODE) }
             binding.cvnew.setOnClickListener {
             val intent00 = Intent(this, Retro::class.java)
             startActivityForResult(intent00, REQUEST_CODE)
         }
     }
     private fun observeViewModel() {
-        viewModel.balance.observe(this, Observer { balance ->
+        viewModel.balance.observe(this) { balance ->
             binding.textView6.text = String.format("%.2f", balance)
-        })
-
-        viewModel.fullName.observe(this, Observer { name ->
+        }
+        Log.e(ContentValues.TAG, "ddddd")
+        viewModel.fullName.observe(this) { name ->
             binding.textView3.text = name
-        })
+        }
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
@@ -111,7 +114,7 @@ class Homescreen : AppCompatActivity() {
 
                     if (documentSnapshot.exists()) {
                         val currentTotal:Double?= documentSnapshot.getDouble("Balance")
-                        var newTotal:Double
+                        val newTotal:Double
                         if(z=="Deposit"){
                          newTotal = currentTotal !!+x
                         binding.textView6.text=newTotal.toString()}
@@ -131,33 +134,6 @@ class Homescreen : AppCompatActivity() {
                 editor.putString("Recycler List", j)
                 editor.apply()
                 adapter.notifyItemInserted(trans.size-1)
-            }
-        }
-    }
-    class CoroutineViewModel : ViewModel() {
-        private val _balance = MutableLiveData<Double>()
-        val balance: LiveData<Double> = _balance
-
-        private val _fullName = MutableLiveData<String>()
-        val fullName: LiveData<String> = _fullName
-
-        fun performAsyncOperation(db:FirebaseFirestore) {
-            viewModelScope.launch {
-
-                db.collection("MYWALLET").document("Details")
-                    .get()
-                    .addOnCompleteListener { task ->
-                        if (task.isSuccessful ) {
-                            Log.d(TAG,"I am talking to you from "+Thread.currentThread())
-                            val documentSnapshot = task.result
-                            if (documentSnapshot.exists()) {
-                                _balance.postValue(documentSnapshot.getDouble("Balance")!!)
-                                _fullName.postValue(documentSnapshot.getString("Full Name")!!)
-
-                               // homescreen.binding.textView6.text = String.format("%.2f",  homescreen.totalbalance)
-
-                                //homescreen.binding.textView3.text=  homescreen.fullname
-                            }}}
             }
         }
     }
