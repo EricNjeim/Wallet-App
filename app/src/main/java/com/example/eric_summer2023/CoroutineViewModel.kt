@@ -14,15 +14,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class CoroutineViewModel @Inject constructor(private val repos: Myrepository) : ViewModel() {
-
-    private val _balance = MutableLiveData<Double?>()
+    private var _balance = MutableLiveData<Double?>()
     val balance: LiveData<Double?> = _balance
-
-
-    private val _fullName = MutableLiveData<String?>()
+    private var _fullName = MutableLiveData<String?>()
     val fullName: LiveData<String?> = _fullName
-
-
     fun performAsyncOperation() {
         viewModelScope.launch {
             try {
