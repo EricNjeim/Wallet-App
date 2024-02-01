@@ -13,7 +13,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.eric_summer2023.databinding.ActivityHomescreenBinding
 import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -38,12 +37,12 @@ class Homescreen : AppCompatActivity() {
         binding = ActivityHomescreenBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val settings = FirebaseFirestoreSettings.Builder()
+        /*val settings = FirebaseFirestoreSettings.Builder()
             .setPersistenceEnabled(true)
             .build()
         db.firestoreSettings = settings
-
-        viewModel.performAsyncOperation()
+*/
+        viewModel.AsyncGet()
         observeViewModel()
 
 
@@ -86,6 +85,7 @@ class Homescreen : AppCompatActivity() {
     @Deprecated("Deprecated in Java")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
+        var newTotal:Double
 
         if (requestCode == REQUEST_CODE && resultCode == Activity.RESULT_OK) {
             val x = data?.getDoubleExtra("Ex",0.0)
@@ -98,22 +98,16 @@ class Homescreen : AppCompatActivity() {
                 temp.add(y)
                 temp.add(x.toString())
 
-                val documentRef = db.collection("MYWALLET").document("Details")
-                db.runTransaction { transaction ->
-                    val documentSnapshot = transaction.get(documentRef)
-
-                    if (documentSnapshot.exists()) {
-                        val currentTotal:Double?= documentSnapshot.getDouble("Balance")
-                        val newTotal:Double
                         if(z=="Deposit"){
-                         newTotal = currentTotal !!+x
-                        binding.textView6.text=newTotal.toString()}
-                        else{
-                            newTotal = currentTotal !!-x
+                            newTotal=binding.textView6.text.toString().toDouble()
+                            newTotal += x
+                            viewModel.AsyncUpdate(newTotal)
                             binding.textView6.text=newTotal.toString()}
-                        transaction.update(documentRef, "Balance", newTotal)
-                    }}
-
+                        else{
+                            newTotal=binding.textView6.text.toString().toDouble()
+                            newTotal -=x
+                            viewModel.AsyncUpdate(newTotal)
+                            binding.textView6.text=newTotal.toString()}
 
                 trans.add(temp)
                 sharedPreferences = getSharedPreferences(fullname, Context.MODE_PRIVATE)

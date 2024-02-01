@@ -1,7 +1,6 @@
 package com.example.eric_summer2023.dynamicinjection
 
-import com.example.eric_summer2023.data.repository.Myrepository
-import com.example.eric_summer2023.domain.repository.Myrepositoryimplementatoin
+import com.google.firebase.firestore.FirebaseFirestore
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -10,10 +9,10 @@ import javax.inject.Singleton
 
 @Module
 @InstallIn(SingletonComponent::class)
-object AppModule {
+object Firebasemodule {
     @Provides
     @Singleton
-    fun provideMyRepository(): Myrepository {
-        return Myrepositoryimplementatoin()
+    fun provideFirebase(): FirebaseFirestore {
+        return FirebaseFirestore.getInstance()
     }
 }
