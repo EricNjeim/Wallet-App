@@ -87,8 +87,6 @@ class Billsspinner : AppCompatActivity() {
                 )
                 spinner1Adapter.setDropDownViewResource(R.layout.simple_spinner_dropdown_item)
                 spinner1.adapter = spinner1Adapter
-
-                // Create ArrayAdapter for spinner2 with empty options
                 val spinner2Adapter = ArrayAdapter(
                     this,
                     R.layout.simple_spinner_item,

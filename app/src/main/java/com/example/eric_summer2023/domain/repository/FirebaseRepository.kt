@@ -9,7 +9,7 @@ class FirebaseRepository @Inject constructor(private val firestore: FirebaseFire
     suspend fun GetData(): Pair<Double, String> {
         val documentSnapshot = firestore.collection("MYWALLET").document("Details").get().await()
 
-        if (documentSnapshot.exists()) {
+        if(documentSnapshot.exists()) {
             val balance = documentSnapshot.getDouble("Balance") ?: 0.0
             val fullName = documentSnapshot.getString("Full Name") ?: ""
             return Pair(balance, fullName)

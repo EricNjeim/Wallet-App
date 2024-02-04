@@ -6,6 +6,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,8 +16,6 @@ import com.google.common.reflect.TypeToken
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.gson.Gson
 import dagger.hilt.android.AndroidEntryPoint
-
-
 @AndroidEntryPoint
 class Homescreen : AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
@@ -53,6 +52,7 @@ class Homescreen : AppCompatActivity() {
         recyclerView = binding.rv
         val layoutManager= LinearLayoutManager(this)
         recyclerView.layoutManager =layoutManager
+        trans.reverse()
         adapter = MyRecyclerViewAdapter(trans)
         recyclerView.adapter = adapter
     }
@@ -69,9 +69,11 @@ class Homescreen : AppCompatActivity() {
             val intent90 = Intent(this, Duebills::class.java)
             startActivityForResult(intent90, REQUEST_CODE) }
             binding.cvnew.setOnClickListener {
-            val intent00 = Intent(this, Retro::class.java)
+           val intent00 = Intent(this, Retro::class.java)
             startActivityForResult(intent00, REQUEST_CODE)
+
         }
+
     }
     private fun observeViewModel() {
         viewModel.balance.observe(this) { balance ->
@@ -97,7 +99,6 @@ class Homescreen : AppCompatActivity() {
                 temp.add(z)
                 temp.add(y)
                 temp.add(x.toString())
-
                         if(z=="Deposit"){
                             newTotal=binding.textView6.text.toString().toDouble()
                             newTotal += x
@@ -108,7 +109,6 @@ class Homescreen : AppCompatActivity() {
                             newTotal -=x
                             viewModel.AsyncUpdate(newTotal)
                             binding.textView6.text=newTotal.toString()}
-
                 trans.add(temp)
                 sharedPreferences = getSharedPreferences(fullname, Context.MODE_PRIVATE)
                 val editor = sharedPreferences.edit()
